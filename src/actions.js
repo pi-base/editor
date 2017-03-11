@@ -13,8 +13,10 @@ const remote = (method, ...args) => {
   })
 }
 
-window.onerror = (err) => {
-  ipc.send('ERROR', err)
+window.onerror = (err) => ipc.send('ERROR', err)
+window.log = (...args) => {
+  ipc.send('LOG', ...args)
+  console.log(...args)
 }
 
 // Action types
@@ -31,8 +33,6 @@ export const editFile = (dispatch, path) => {
 export const runSearch = (dispatch, q) => {
   if (q === '!') {
     editFile(dispatch, 'properties/metrizable.md')
-  } else if (q === '@') {
-    throw 'Forced error'
   } else {
     dispatch({ type: RUN_SEARCH, q: q })
   }

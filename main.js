@@ -27,6 +27,10 @@ if (process.env.NODE_ENV === 'development') {
     mainWindow.webContents.openDevTools({ mode: 'bottom' })
     console.log('Unhandled error', err)
   })
+
+  electron.ipcMain.on('LOG', function(event, err) {
+    mainWindow.webContents.openDevTools({ mode: 'bottom' })
+  })
 }
 
 function createWindow () {

@@ -1,7 +1,35 @@
+/* global MathJax */
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { connect } from 'react-redux'
 
 import { Row, Col, FormControl } from 'react-bootstrap'
+
+import core from 'pi-base-core'
+
+class Preview extends React.Component {
+  queue() {
+    const node = ReactDOM.findDOMNode(this)
+    if (typeof(MathJax) !== `undefined`) {
+      MathJax.Hub.Queue([`Typeset`, MathJax.Hub, node])
+    }
+  }
+
+  componentDidMount() {
+    this.queue()
+  }
+
+  componentDidUpdate() {
+    this.queue()
+  }
+
+  render() {
+    const { raw } = this.props
+    const markup = core.markdown(raw)
+
+    return <div className="markdown" dangerouslySetInnerHTML={{__html: markup}}/>
+  }
+}
 
 class Editor extends React.Component {
   componentWillMount() {
@@ -13,12 +41,14 @@ class Editor extends React.Component {
 
   handleChange(e) {
     this.setState({
+      body:    e.target.value,
       preview: this.preview(e.target.value)
     })
   }
 
   preview(text) {
-    return text
+    const frags = text.split('---')
+    return core.markdown(frags[frags.length - 1])
   }
 
   render() {
@@ -33,11 +63,11 @@ class Editor extends React.Component {
               componentClass="textarea"
               value={this.state.body}
               rows={40}
-              onChange={this.handleChange.bind(this)
-            }/>
+              onChange={this.handleChange.bind(this)}
+            />
           </Col>
           <Col md={6}>
-            {this.state.preview}
+            <Preview raw={this.state.preview}/>
           </Col>
         </Row>
       </main>

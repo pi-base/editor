@@ -11,9 +11,13 @@ class Layout extends React.Component {
   componentWillMount() {
     this.props.runSearch('!')
   }
-  
+
   handleChange(e) {
     this.props.runSearch(e.target.value)
+  }
+
+  openLog() {
+    window.log()
   }
 
   render() {
@@ -24,6 +28,9 @@ class Layout extends React.Component {
             <Navbar.Brand>
               <a href="#">PiBase Editor</a>
             </Navbar.Brand>
+            <ul className="nav navbar-nav">
+              <li><a href="#" onClick={this.openLog()}>?</a></li>
+            </ul>
           </Navbar.Header>
         </Navbar>
 
